@@ -27,8 +27,8 @@ describe('loading express', function () {
             })
             .end((err, res) => {
                 res.should.have.status(200);
-                res.should.have.header('content-type', 'application/pdf; charset=utf-8');
-                res.should.have.header('Content-Disposition', `attachment; filename="Dummy title"`);
+                res.should.have.header('content-type', 'application/pdf');
+                res.should.have.header('Content-Disposition', `attachment; filename="Dummy title.pdf"`);
                 done();
             });
     });
@@ -46,7 +46,7 @@ describe('loading express', function () {
             });
     });
 
-    it('responds to /print with 400 when pdf file title is not provided', (done) => {
+    it('responds to /print with 200 and static file name when title is not provided', (done) => {
         chai.request(server)
             .post('/print')
             .set('content-type', 'application/json')
@@ -54,7 +54,9 @@ describe('loading express', function () {
                 "html": "<html><body><h1>My first Heading</h1><p>My first paragraph.</p></body></html>"
             })
             .end((err, res) => {
-                res.should.have.status(400);
+                res.should.have.status(200);
+                res.should.have.header('content-type', 'application/pdf');
+                res.should.have.header('Content-Disposition', `attachment; filename="generatedFile.pdf"`);
                 done();
             });
     });
@@ -65,6 +67,27 @@ describe('loading express', function () {
             .set('content-type', 'application/json')
             .end((err, res) => {
                 res.should.have.status(400);
+                done();
+            });
+    });
+
+    it('responds to /print with 200 when print options are passed', (done) => {
+        chai.request(server)
+            .post('/print')
+            .set('content-type', 'application/json')
+            .send({
+                html: "<html><body><h1>My first Heading</h1><p>My first paragraph.</p></body></html>",
+                options: {
+                    margin:
+                        {
+                            top: "35px",
+                            right: "35px",
+                            left: "35px"
+                        }
+                }
+            })
+            .end((err, res) => {
+                res.should.have.status(200);
                 done();
             });
     });

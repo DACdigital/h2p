@@ -1,25 +1,26 @@
-const express = require('express')
-const router = express.Router()
+const express = require('express');
+const router = express.Router();
 
-module.exports = function(cluster) {
+module.exports = (cluster) => {
 
     router.post('/print', async (req, res, next) => {
         try {
-            if (typeof req.body.html !== 'string' || typeof req.body.title !== 'string') {
+            if (typeof req.body.html !== 'string') {
                 res.status(400)
                     .send('Invalid Argument: HTML expected as type of string and received a value of a different type.' +
                         'Check your request body and request headers.');
                 return;
             }
 
-            const generatedPdf = await cluster.execute(req.body.html);
+            const generatedPdf = await cluster.execute({html: req.body.html, options: req.body.options});
+            const fileName = req.body.title ? req.body.title : 'generatedFile';
 
             res.status(200)
                 .set({
-                    'content-type': 'application/pdf; charset=utf-8',
-                    'Content-Disposition': `attachment; filename="${req.body.title}"`
+                    'content-type': 'application/pdf',
+                    'Content-Disposition': `attachment; filename="${fileName}.pdf"`
                 })
-                .send(generatedPdf)
+                .send(generatedPdf);
         } catch (err) {
             next(err);
         }

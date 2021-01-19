@@ -1,13 +1,7 @@
-# TODO not tested as it is part of the future task
 stages:
   - test
   - build
   - deploy
-
-# TODO Maybe it will be possible to cache it in the future
-#cache:
-#  paths:
-#    - node_modules/
 
 test:
   image: node:latest
@@ -62,5 +56,5 @@ build_docker_branch:
     - IMAGE_TAG="$CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME"
     - docker build -t "$IMAGE_TAG"
     - docker push "$IMAGE_TAG"
-    except:
+  except:
       - master

@@ -2,7 +2,6 @@ const express = require('express');
 const morgan = require('morgan');
 const {Cluster} = require('puppeteer-cluster');
 const bodyParser = require('body-parser');
-const cors = require('cors');
 const healthController = require('./routes/health');
 const pdfGeneratorController = require('./routes/pdf')
 
@@ -12,7 +11,7 @@ const app = express();
 const port = process.env.PORT || 3000;
 
 app.use(morgan('tiny'));
-app.use(cors());
+
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 
@@ -32,8 +31,8 @@ async function launch() {
     });
 
     // Setup the function to be executed for each request while cluster.execute is called
-    await cluster.task(async ({page, data: htmlToGenerate}) => {
-        return await convertToPdf(page, htmlToGenerate);
+    await cluster.task(async ({page, data: taskData}) => {
+        return await convertToPdf(page, taskData.html, taskData.options);
     });
 
     app.use(healthController);

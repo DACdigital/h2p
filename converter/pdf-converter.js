@@ -1,14 +1,16 @@
-const saveToPdf = async (page, html) => {
+const saveToPdf = async (page, html, options) => {
     await page.setContent(html);
 
-    const pdf = await page.pdf({
+    /*
+     For the options to pdf function please look at the docs
+     https://devdocs.io/puppeteer/index#pagepdfoptions
+    */
+    printOpts = {
         format: 'A4',
-        margin: {
-            top: '35px',
-            right: '35px',
-            left: '35px'
-        }
-    });
+        ...options
+    }
+    
+    const pdf = await page.pdf(printOpts);
 
     return pdf;
 };
