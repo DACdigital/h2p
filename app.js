@@ -21,6 +21,7 @@ async function launch() {
         args: [
             '--no-sandbox',
             '--disable-setuid-sandbox',
+            '--disable-dev-shm-usage'
         ]
     };
 
@@ -38,9 +39,12 @@ async function launch() {
     app.use(healthController);
     app.use(pdfGeneratorController(cluster));
 
-    return app.listen(port, () => console.log(`PDF converter app listening on port ${port}!`));
+    return await new Promise((resolve) => {
+        const server = app.listen(port, () => resolve(server));
+    }).then((server) => {
+        console.log(`PDF converter app listening on port ${port}!`);
+        return server;
+    });
 }
 
-const server = launch();
-
-module.exports = server;
+module.exports = launch();

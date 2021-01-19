@@ -4,34 +4,29 @@ const chaiHttp = require('chai-http');
 chai.use(chaiHttp);
 chai.should();
 
-describe('loading express', function () {
+describe('Health endpoint tests', () => {
 
     var server;
 
-    beforeEach(async function () {
+    beforeEach(async () => {
         server = await require('../app');
     });
 
-    afterEach((done) => {
-        delete require.cache[require.resolve( '../app' )];
-        done();
+    afterEach(async () => {
+        delete await require.cache[require.resolve( '../app' )];
     })
 
-    it('responds to / with 200 status', (done) => {
-        chai.request(server)
-            .get('/')
-            .end((err, res) => {
-                res.should.have.status(200);
-                done();
-            });
+    it('responds to / with 200 status', async () => {
+        const res = await chai.request(server)
+            .get('/');
+
+        res.should.have.status(200);
     });
 
-    it('reponds to everything else with 404 status', (done) => {
-        chai.request(server)
-            .get('/foo')
-            .end((err, res) => {
-                res.should.have.status(404);
-                done();
-            });
+    it('reponds to everything else with 404 status', async () => {
+        const res = await chai.request(server)
+            .get('/foo');
+
+        res.should.have.status(404);
     });
 });
