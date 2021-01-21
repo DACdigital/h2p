@@ -33,6 +33,7 @@ async function launch() {
 
     // Setup the function to be executed for each request while cluster.execute is called
     await cluster.task(async ({page, data: taskData}) => {
+        await page.setDefaultNavigationTimeout(0);
         return await convertToPdf(page, taskData.html, taskData.options);
     });
 

@@ -1,6 +1,5 @@
 stages:
   - test
-  - build
   - deploy
 
 test:
@@ -9,17 +8,6 @@ test:
   script:
     - npm install
     - node node_modules/.bin/mocha --exit test/*.spec.js
-
-build_app:
-  image: node:10.19.0
-  stage: build
-  script:
-    - npm install
-    - node ./app.js
-  artifacts:
-    paths:
-      - "./"
-    expire_in: 1 week
 
 build_docker_master:
   image: docker:$DOCKER_VERSION
@@ -35,7 +23,7 @@ build_docker_master:
     - IMAGE_TAG_LATEST="$CI_REGISTRY_IMAGE:latest"
     - IMAGE_TAG_VERSION="$CI_REGISTRY_IMAGE:1.0.$CI_JOB_ID"
     - IMAGE_TAG_COMMIT_SHA="$CI_REGISTRY_IMAGE:$CI_COMMIT_SHA"
-    - docker build -t "$IMAGE_TAG_COMMIT_SHA" -t "$IMAGE_TAG_LATEST" -t "$IMAGE_TAG_VERSION"
+    - docker build -t "$IMAGE_TAG_COMMIT_SHA" -t "$IMAGE_TAG_LATEST" -t "$IMAGE_TAG_VERSION" .
     - docker push "$IMAGE_TAG_COMMIT_SHA"
     - docker push "$IMAGE_TAG_VERSION"
     - docker push "$IMAGE_TAG_LATEST"
@@ -57,4 +45,4 @@ build_docker_branch:
     - docker build -t "$IMAGE_TAG" .
     - docker push "$IMAGE_TAG"
   except:
-      - master
+    - master
