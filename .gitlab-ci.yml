@@ -32,13 +32,13 @@ build_docker_master:
     DOCKER_TLS_CERTDIR: ""
   script:
     - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
-      - IMAGE_TAG_LATEST="$CI_REGISTRY_IMAGE:latest"
-      - IMAGE_TAG_VERSION="$CI_REGISTRY_IMAGE:1.0.$CI_JOB_ID"
-      - IMAGE_TAG_COMMIT_SHA="$CI_REGISTRY_IMAGE:$CI_COMMIT_SHA"
-      - docker build -t "$IMAGE_TAG_COMMIT_SHA" -t "$IMAGE_TAG_LATEST" -t "$IMAGE_TAG_VERSION"
-      - docker push "$IMAGE_TAG_COMMIT_SHA"
-      - docker push "$IMAGE_TAG_VERSION"
-      - docker push "$IMAGE_TAG_LATEST"
+    - IMAGE_TAG_LATEST="$CI_REGISTRY_IMAGE:latest"
+    - IMAGE_TAG_VERSION="$CI_REGISTRY_IMAGE:1.0.$CI_JOB_ID"
+    - IMAGE_TAG_COMMIT_SHA="$CI_REGISTRY_IMAGE:$CI_COMMIT_SHA"
+    - docker build -t "$IMAGE_TAG_COMMIT_SHA" -t "$IMAGE_TAG_LATEST" -t "$IMAGE_TAG_VERSION"
+    - docker push "$IMAGE_TAG_COMMIT_SHA"
+    - docker push "$IMAGE_TAG_VERSION"
+    - docker push "$IMAGE_TAG_LATEST"
   only:
     - master
 
