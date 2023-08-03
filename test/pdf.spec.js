@@ -9,12 +9,12 @@ describe('Pdf endpoint tests', () => {
 
     var server;
 
-    beforeEach(async () => {
+    before(async () => {
         server = await require('../app');
     });
 
-    afterEach(async () => {
-        delete await require.cache[require.resolve('../app')];
+    after(async () => {
+        delete await server;
     })
 
     it('responds to /print with 200 and generated pdf', async () => {
@@ -31,9 +31,49 @@ describe('Pdf endpoint tests', () => {
         res.should.have.header('Content-Disposition', `attachment; filename="Dummy title.pdf"`);
     });
 
+    it('responds to /print-batch with 200 and generated pdf for array of documents', async () => {
+        const res = await chai.request(server)
+            .post('/print-batch')
+            .set('content-type', 'application/json')
+            .send({
+                "title": "Dummy title",
+                "html": [
+                    "<html><body><h1>My first Heading</h1><p>My first paragraph.</p></body></html>",
+                    "<html><body><h1>My first Heading</h1><p>My first paragraph.</p></body></html>"
+                ]
+            });
+
+        res.should.have.status(200);
+        res.should.have.header('content-type', 'application/pdf');
+        res.should.have.header('Content-Disposition', `attachment; filename="Dummy title.pdf"`);
+    });
+
     it('responds to /print with 400 when html is not provided', async () => {
         const res = await chai.request(server)
             .post('/print')
+            .set('content-type', 'application/json')
+            .send({
+                "title": "Dummy title"
+            });
+
+        res.should.have.status(400);
+    });
+
+    it('responds to /print-batch with 400 when html is empty', async () => {
+        const res = await chai.request(server)
+            .post('/print-batch')
+            .set('content-type', 'application/json')
+            .send({
+                "title": "Dummy title",
+                "html": []
+            });
+
+        res.should.have.status(400);
+    });
+
+    it('responds to /print-batch with 400 when html is not provided', async () => {
+        const res = await chai.request(server)
+            .post('/print-batch')
             .set('content-type', 'application/json')
             .send({
                 "title": "Dummy title"

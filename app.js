@@ -5,8 +5,6 @@ const bodyParser = require('body-parser');
 const healthController = require('./routes/health');
 const pdfGeneratorController = require('./routes/pdf')
 
-const convertToPdf = require('./converter/pdf-converter');
-
 const app = express();
 const port = process.env.PORT || 3000;
 
@@ -30,22 +28,17 @@ async function launch() {
         maxConcurrency: 4,
         puppeteerOptions: puppeteerConfig
     });
-
-    // Setup the function to be executed for each request while cluster.execute is called
     await cluster.task(async ({page, data: taskData}) => {
         await page.setDefaultNavigationTimeout(0);
-        return await convertToPdf(page, taskData.html, taskData.options);
+        return await taskData.callback(page, taskData.html, taskData.options);
     });
 
     app.use(healthController);
     app.use(pdfGeneratorController(cluster));
 
-    return await new Promise((resolve) => {
-        const server = app.listen(port, () => resolve(server));
-    }).then((server) => {
-        console.log(`PDF converter app listening on port ${port}!`);
-        return server;
-    });
+    const server = app.listen(port);
+    console.log(`PDF converter app listening on port ${port}!`);
+    return server;
 }
 
 module.exports = launch();
