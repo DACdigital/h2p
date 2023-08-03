@@ -1,14 +1,24 @@
-const saveToPdf = async (page, html, options) => {
+const PDFMerger = require('pdf-merger-js');
+
+async function saveToPdf(page, html, options) {
     await page.setContent(html);
 
     printOpts = {
         format: 'A4',
         ...options
     }
-    
-    const pdf = await page.pdf(printOpts);
 
-    return pdf;
-};
+    return await page.pdf(printOpts);
+}
 
-module.exports = saveToPdf;
+async function saveMultipleToPdf(page, documents, options) {
+    const merger = new PDFMerger();
+    for (const document of documents) {
+        const generated = await saveToPdf(page, document, options);
+        await merger.add(generated);
+    }
+    return await merger.saveAsBuffer();
+}
+
+module.exports.saveToPdf = saveToPdf;
+module.exports.saveMultipleToPdf = saveMultipleToPdf;
