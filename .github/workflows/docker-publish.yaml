@@ -1,21 +1,27 @@
-name: Build & Publish Docker Images
+name: Build & Publish Per-Arch Docker Images
 
 on:
   workflow_dispatch:
     inputs:
       tag:
-        description: 'Docker image tag'
+        description: 'Base tag for Docker images'
         required: true
         default: 'latest'
 
 jobs:
-  publish:
-    name: Build and Push Docker Image
+  build-and-push:
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/master'
+    strategy:
+      matrix:
+        include:
+          - platform: linux/amd64
+            suffix: amd64
+          - platform: linux/arm64
+            suffix: arm64
 
     steps:
-      - name: Checkout code
+      - name: Check out code
         uses: actions/checkout@v4
 
       - name: Set up Docker Buildx
@@ -27,10 +33,10 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Build and Push (multi-arch)
+      - name: Build and push for ${{ matrix.suffix }}
         uses: docker/build-push-action@v5
         with:
           context: .
+          platforms: ${{ matrix.platform }}
           push: true
-          platforms: linux/amd64,linux/arm64
-          tags: dacinfomotion/h2p:${{ github.event.inputs.tag }}
+          tags: dacinfomotion/h2p:${{ github.event.inputs.tag }}-${{ matrix.suffix }}
