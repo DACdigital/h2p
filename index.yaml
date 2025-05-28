@@ -2,6 +2,16 @@ apiVersion: v1
 entries:
   h2p:
   - apiVersion: v2
+    appVersion: 1.0.1
+    created: "2025-05-28T12:19:09.962550229Z"
+    description: H2P project
+    digest: 103d61b6c69ba8a917ea4ea518604a91264637e91dabac88b04790074ea8ce23
+    name: h2p
+    type: application
+    urls:
+    - https://github.com/DACdigital/h2p/releases/download/h2p-1.0.1/h2p-1.0.1.tgz
+    version: 1.0.1
+  - apiVersion: v2
     appVersion: 1.0.0
     created: "2025-05-28T14:00:36.591706+02:00"
     description: H2P project
@@ -11,4 +21,4 @@ entries:
     urls:
     - h2p-1.0.0.tgz
     version: 1.0.0
-generated: "2025-05-28T14:00:36.591209+02:00"
+generated: "2025-05-28T12:19:09.962558585Z"
