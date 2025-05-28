@@ -1,5 +1,0 @@
-include:
-  - project: 'bettersolutions/gitlab-ci'
-    ref: master
-    file:
-      - 'templates/docker/.docker-build.yml'
