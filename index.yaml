@@ -3,12 +3,12 @@ entries:
   h2p:
   - apiVersion: v2
     appVersion: 1.0.0
-    created: "2025-05-28T12:11:22.515799+02:00"
+    created: "2025-05-28T14:00:36.591706+02:00"
     description: H2P project
-    digest: 4dab161db54184fd5f017820483ce85ab6083c9e15582a5163aee9fff89449fe
+    digest: 73d6faa7b6ff72f96ced156d9db99624965103d398b1b669548ae6493c457b09
     name: h2p
     type: application
     urls:
     - h2p-1.0.0.tgz
     version: 1.0.0
-generated: "2025-05-28T12:11:22.514675+02:00"
+generated: "2025-05-28T14:00:36.591209+02:00"
