@@ -3,37 +3,22 @@ name: Publish Helm chart
 on: workflow_dispatch
 
 jobs:
-  publish:
-    name: Package & publish chart
+  release:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
+      - name: Checkout code
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: Set up Helm
-        uses: azure/setup-helm@v4.3.0
-
-      - name: Lint chart
+      - name: Set up Git
         run: |
-          helm lint charts/h2p
+          git config user.name "dac"
+          git config user.email "dac_user@dac.digital"
 
-      - name: Package chart
-        run: |
-          mkdir -p .charts
-          helm package charts/h2p --destination .charts
-
-      - name: Update index.yaml
-        run: |
-          # URL should point to where GH Pages serves your charts
-          helm repo index .charts 
-
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v4
+      - name: Run chart-releaser
+        uses: helm/chart-releaser-action@v1.7.0
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_branch: gh-pages
-          publish_dir: .charts
-          destination_dir: charts
-
+          charts_dir: charts
+        env:
+          CR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
