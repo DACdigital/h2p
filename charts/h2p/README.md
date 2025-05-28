@@ -10,7 +10,7 @@ To deploy H2P using Helm, follow these steps:
 1. **Add the Helm repository**:
 
    ```bash
-   helm repo add h2p https://dacdigital.github.io/h2p/charts
+   helm repo add h2p https://dacdigital.github.io/h2p
    helm repo update
    ```
 
