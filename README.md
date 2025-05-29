@@ -10,6 +10,7 @@ https://devdocs.io/puppeteer/index#pagepdfoptions
 ```
 curl --location --request POST 'http://localhost:3000/print' \
 --header 'Content-Type: application/json' \
+--output example.pdf \
 --data-raw '{
     "title": "ExampleRoute",
     "html": "<html><body><h1>My first Heading</h1><p>My first paragraph.</p></body></html>"
@@ -20,6 +21,7 @@ curl --location --request POST 'http://localhost:3000/print' \
 ```
 curl --location --request POST 'http://localhost:3000/print' \
 --header 'Content-Type: application/json' \
+--output example.pdf \
 --data-raw '{
     "title": "ExampleRoute",
     "html": "<html><body><h1>My first Heading</h1><p>My first paragraph.</p></body></html>",
