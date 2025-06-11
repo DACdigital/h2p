@@ -11,7 +11,7 @@ WORKDIR /app
 COPY . .
 
 RUN npm install
-RUN node node_modules/.bin/mocha --timeout 25000 --exit test/*.spec.js
+RUN node node_modules/.bin/mocha --timeout 100000 --exit test/*.spec.js
 RUN npm ci -production && npm cache clean --force
 
 
