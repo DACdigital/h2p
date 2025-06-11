@@ -15,11 +15,12 @@ app.use(bodyParser.json({limit: '50mb'}));
 
 async function launch() {
     const puppeteerConfig = {
-        headless: true,
+        headless: "new",
         args: [
             '--no-sandbox',
             '--disable-setuid-sandbox',
-            '--disable-dev-shm-usage'
+            '--disable-dev-shm-usage',
+            '--disable-gpu' 
         ]
     };
 
